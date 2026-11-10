@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { meditate } from './meditation/state.svelte';
   import type { Meditation } from './meditation/library';
-  import { paletteFrom, type Palette } from './palette';
+  import { paletteFrom, glassFrom, tintTextFrom, type Palette, type Glass, dangerTextFrom } from './palette';
   import { onPrefsChange } from './prefs-live';
   import List from './screens/list.svelte';
   import Player from './screens/player.svelte';
@@ -12,11 +12,17 @@
 
   let view = $state<View>({ name: 'list' });
   let palette = $state<Palette>(paletteFrom(undefined));
+  let dangerText = $state(dangerTextFrom(undefined));
+  let glass = $state<Glass>(glassFrom(undefined));
+  let tintText = $state(tintTextFrom(undefined));
   let scale = $state(1);
 
   const applyNomieValues = (plugin: any) => {
     if (!plugin?.prefs) return;
     palette = paletteFrom(plugin.prefs);
+    dangerText = dangerTextFrom(plugin.prefs);
+    glass = glassFrom(plugin.prefs);
+    tintText = tintTextFrom(plugin.prefs);
     scale = plugin.prefs.fontScale || 1;
   };
 
@@ -52,7 +58,7 @@
   });
 </script>
 
-<div class="root" style="--page: {palette.page}; --card: {palette.card}; --card-inner: {palette.cardInner}; --text: {palette.text}; --muted: {palette.textSecondary}; --line: {palette.separator}; --fill: {palette.fill}; --tint: {palette.tint}; --on-tint: {palette.onTint}; --tint-soft: {palette.tintSoft}; --good: {palette.good}; --danger: {palette.danger}; --scale: {scale};">
+<div class="root" style="--page: {palette.page}; --card: {palette.card}; --card-inner: {palette.cardInner}; --text: {palette.text}; --muted: {palette.textSecondary}; --line: {palette.separator}; --fill: {palette.fill}; --tint: {palette.tint}; --on-tint: {palette.onTint}; --tint-soft: {palette.tintSoft}; --good: {palette.good}; --danger: {dangerText}; --glass-fill: {glass.fill}; --glass-edge: {glass.edge}; --glass-blur: {glass.blur}; --glass-shadow: {glass.shadow}; --tint-text: {tintText}; --scale: {scale};">
   <header class="top">
     <div class="title">
       <span aria-hidden="true">🧘🏽‍♀️</span>
@@ -96,9 +102,14 @@
 
 <style>
   .root { box-sizing: border-box; min-height: 100vh; max-width: 520px; margin: 0 auto; padding: 16px; background: var(--page); color: var(--text); font-size: calc(16px * var(--scale)); line-height: 1.4; }
-  .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  /* the plugin page fills the frame, so the glass bar sits at the top edge */
+  /* the app's text: its iOS font stack (main.css --ios-font), with the app's smoothing */
+  :global(body) { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; -webkit-font-smoothing: antialiased; --ios-font-rounded: ui-rounded, -apple-system, system-ui, sans-serif; }
+  /* the header is a Liquid Glass bar (D-glass): it stays at the top and the content scrolls under it */
+  .top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; margin: -16px -16px 8px; padding: 16px 16px 10px; background: var(--glass-fill); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--glass-edge); }
   .title { display: flex; align-items: center; gap: 8px; }
   h1 { margin: 0; font-size: calc(22px * var(--scale)); font-weight: 700; }
+  /* the icon button sits in the glass header, so it is a solid fill (glass never sits on glass) */
   .icon { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--fill); color: var(--text); font-size: calc(17px * var(--scale)); cursor: pointer; }
   .muted { color: var(--muted); font-size: calc(14px * var(--scale)); }
   .card { padding: 14px 16px; border-radius: 16px; background: var(--card); margin: 12px 0; }
@@ -109,7 +120,7 @@
   .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%; background: #fff; transition: transform 0.15s; }
   .toggle.on { background: var(--tint); }
   .toggle.on::after { transform: translateX(20px); }
-  .chip { margin-top: 8px; padding: 8px 12px; border: 0; border-radius: 10px; background: var(--fill); color: var(--tint); font: inherit; cursor: pointer; }
+  .chip { margin-top: 8px; padding: 8px 12px; border: 0; border-radius: 10px; background: var(--fill); color: var(--tint-text); font: inherit; cursor: pointer; }
   .link { padding: 6px 0; border: 0; background: transparent; font: inherit; cursor: pointer; color: var(--tint); }
   .danger { color: var(--danger); }
   .ghost { display: block; width: 100%; margin-top: 8px; padding: 12px; border: 0; border-radius: 12px; background: var(--fill); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
