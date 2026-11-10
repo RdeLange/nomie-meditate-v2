@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from '../i18n/index.svelte';
   import { meditate } from '../meditation/state.svelte';
   import { suggestionFor, thisWeek, type Meditation } from '../meditation/library';
 
@@ -11,23 +12,23 @@
 </script>
 
 <section class="card week">
-  <p class="caption">This week</p>
-  <p class="big">{week.count} <span class="muted">{week.count === 1 ? 'meditation' : 'meditations'}</span></p>
-  <p class="muted">{week.minutes} minutes</p>
+  <p class="caption">{t('thisWeek')}</p>
+  <p class="big">{week.count} <span class="muted">{week.count === 1 ? t('meditationOne') : t('meditationMany')}</span></p>
+  <p class="muted">{t('minutesWeek', { minutes: week.minutes })}</p>
 </section>
 
 {#if today}
   <section class="card suggest">
-    <p class="caption">For today</p>
+    <p class="caption">{t('forToday')}</p>
     <p class="title">{today.name}</p>
     <p class="muted">{today.duration}</p>
-    <button class="primary" onclick={() => open(today)}>Play</button>
+    <button class="primary" onclick={() => open(today)}>{t('play')}</button>
   </section>
 {/if}
 
 <div class="filters">
-  <button class:on={!onlyFavourites} aria-pressed={!onlyFavourites} onclick={() => (onlyFavourites = false)}>All</button>
-  <button class:on={onlyFavourites} aria-pressed={onlyFavourites} onclick={() => (onlyFavourites = true)}>Favourites</button>
+  <button class:on={!onlyFavourites} aria-pressed={!onlyFavourites} onclick={() => (onlyFavourites = false)}>{t('all')}</button>
+  <button class:on={onlyFavourites} aria-pressed={onlyFavourites} onclick={() => (onlyFavourites = true)}>{t('favourites')}</button>
 </div>
 
 {#each shown as m (m.id)}
@@ -43,10 +44,10 @@
     </button>
   </div>
 {:else}
-  <p class="muted pad">No meditations in this list yet.</p>
+  <p class="muted pad">{t('noList')}</p>
 {/each}
 
-<button class="ghost" onclick={add}>Add a meditation</button>
+<button class="ghost" onclick={add}>{t('addMeditation')}</button>
 
 <style>
   .card { padding: 14px 16px; border-radius: 16px; background: var(--card); margin: 12px 0; }

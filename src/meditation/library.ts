@@ -1,3 +1,4 @@
+import { t } from '../i18n/index.svelte';
 // The meditations: the built-in guided ones of v1, the ones the user adds, favourites, what was watched, and the note.
 import builtIn from '../data/meditations.json';
 

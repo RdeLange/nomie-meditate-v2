@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from '../i18n/index.svelte';
   import { onDestroy, onMount } from 'svelte';
   import { meditate } from '../meditation/state.svelte';
   import type { Meditation } from '../meditation/library';
@@ -59,8 +60,8 @@
 <div class="player">
   <div class="frame" bind:this={host}></div>
   {#if failed}
-    <p class="muted">The video does not play here. You can watch it on YouTube and mark it finished below.</p>
-    <button class="ghost" onclick={openOnYouTube}>Open on YouTube</button>
+    <p class="muted">{t('noVideo')}</p>
+    <button class="ghost" onclick={openOnYouTube}>{t('openYt')}</button>
   {/if}
 </div>
 
@@ -72,19 +73,19 @@
 
 {#if meditate.finished}
   <section class="card done">
-    <h3>Well done</h3>
+    <h3>{t('wellDone')}</h3>
     {#if meditate.logged}
-      <p class="notice">Logged to your timeline.</p>
+      <p class="notice">{t('loggedToTimeline')}</p>
     {:else}
-      <p class="muted">Log this meditation to your timeline?</p>
-      <button class="primary" onclick={() => meditate.log()}>Log to timeline</button>
+      <p class="muted">{t('logPrompt')}</p>
+      <button class="primary" onclick={() => meditate.log()}>{t('logToTimeline')}</button>
     {/if}
   </section>
-  <button class="ghost" onclick={() => meditate.stop()}>Back to the list</button>
+  <button class="ghost" onclick={() => meditate.stop()}>{t('backToList')}</button>
 {:else}
   <div class="actions">
-    <button class="ghost" onclick={() => meditate.stop()}>Back</button>
-    <button class="primary" onclick={() => meditate.markFinished()}>I finished it</button>
+    <button class="ghost" onclick={() => meditate.stop()}>{t('back')}</button>
+    <button class="primary" onclick={() => meditate.markFinished()}>{t('iFinished')}</button>
   </div>
 {/if}
 

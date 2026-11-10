@@ -1,3 +1,4 @@
+import { t } from '../i18n/index.svelte';
 // The state of the plugin: the meditations, favourites, what was watched, and the one playing.
 import { allMeditations, meditationProblem, noteFor, normaliseCustom, toggleFavourite, type Meditation, type Watched } from './library';
 
@@ -48,7 +49,7 @@ class MeditateState {
   }
 
   async deleteCustom(id: string): Promise<boolean> {
-    const res = await this.plugin.confirm('Delete this meditation?', 'It is removed from your list. Your timeline is not changed.');
+    const res = await this.plugin.confirm(t('deleteQ'), t('deleteBody'));
     if (!res?.value) return false;
     this.custom = this.custom.filter((c) => c.id !== id);
     this.save('custom', this.custom);
@@ -88,7 +89,7 @@ class MeditateState {
   }
 
   async clearWatched(): Promise<void> {
-    const res = await this.plugin.confirm('Clear the watched list?', 'The history of meditations is removed. Your timeline is not changed.');
+    const res = await this.plugin.confirm(t('clearQ'), t('clearBody'));
     if (!res?.value) return;
     this.watched = [];
     this.save('watched', []);

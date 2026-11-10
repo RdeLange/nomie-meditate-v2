@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t, setLanguage } from './i18n/index.svelte';
   import { onMount } from 'svelte';
   import { meditate } from './meditation/state.svelte';
   import type { Meditation } from './meditation/library';
@@ -20,6 +21,7 @@
   const applyNomieValues = (plugin: any) => {
     if (!plugin?.prefs) return;
     palette = paletteFrom(plugin.prefs);
+    setLanguage(plugin.prefs?.language);
     dangerText = dangerTextFrom(plugin.prefs);
     glass = glassFrom(plugin.prefs);
     tintText = tintTextFrom(plugin.prefs);
@@ -65,29 +67,29 @@
       <h1>Meditate</h1>
     </div>
     {#if !meditate.current && view.name !== 'settings'}
-      <button class="icon" aria-label="Settings" onclick={() => (view = { name: 'settings' })}>⚙︎</button>
+      <button class="icon" aria-label={t('settingsLabel')} onclick={() => (view = { name: 'settings' })}>⚙︎</button>
     {/if}
   </header>
 
   {#if !meditate.loaded}
-    <p class="muted">Loading…</p>
+    <p class="muted">{t('loading')}</p>
   {:else if meditate.current}
     <Player meditation={meditate.current} />
   {:else if view.name === 'settings'}
     <section class="card">
-      <p class="caption">Timeline</p>
+      <p class="caption">{t('timeline')}</p>
       <div class="row">
-        <span>Ask before logging</span>
-        <button class="toggle" class:on={meditate.askBeforeLog} aria-pressed={meditate.askBeforeLog} aria-label="Ask before logging" onclick={() => meditate.setAskBeforeLog(!meditate.askBeforeLog)}></button>
+        <span>{t('askBeforeLog')}</span>
+        <button class="toggle" class:on={meditate.askBeforeLog} aria-pressed={meditate.askBeforeLog} aria-label={t('askBeforeLog')} onclick={() => meditate.setAskBeforeLog(!meditate.askBeforeLog)}></button>
       </div>
-      <p class="hint">A finished meditation is written with #meditation(duration) and the care tag, so it shows in your timeline and in the tracker.</p>
-      <button class="chip" onclick={createTracker}>Create the Meditation tracker</button>
+      <p class="hint">{t('logHint')}</p>
+      <button class="chip" onclick={createTracker}>{t('createTracker')}</button>
     </section>
     <section class="card">
-      <p class="muted">{meditate.watched.length} meditations in your history.</p>
-      <button class="link danger" onclick={() => meditate.clearWatched()}>Clear the history</button>
+      <p class="muted">{t('inHistory', { n: meditate.watched.length })}</p>
+      <button class="link danger" onclick={() => meditate.clearWatched()}>{t('clearHistory')}</button>
     </section>
-    <button class="ghost" onclick={() => (view = { name: 'list' })}>Back</button>
+    <button class="ghost" onclick={() => (view = { name: 'list' })}>{t('back')}</button>
   {:else if view.name === 'add'}
     <Editor meditation={null} isNew={true} done={() => (view = { name: 'list' })} />
   {:else if view.name === 'edit'}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from '../i18n/index.svelte';
   import { meditate } from '../meditation/state.svelte';
   import { formatDuration, meditationProblem, parseDuration, youtubeIdFrom, type Meditation } from '../meditation/library';
 
@@ -40,26 +41,26 @@
   const current = $derived(meditationProblem({ ...draft, youtubeId: youtubeIdFrom(draft.youtubeId) }));
 </script>
 
-<h2>{isNew ? 'New meditation' : 'Edit meditation'}</h2>
+<h2>{isNew ? t('newTitle') : t('editTitle')}</h2>
 
 <section class="card">
-  <label class="field"><span class="muted">Name</span><input class="input" bind:value={draft.name} placeholder="Morning calm" /></label>
-  <label class="field"><span class="muted">Description</span><textarea class="input" rows="2" bind:value={draft.description}></textarea></label>
-  <label class="field"><span class="muted">YouTube link or id</span><input class="input" bind:value={draft.youtubeId} placeholder="https://youtu.be/…" /></label>
-  <label class="field"><span class="muted">Duration (hh:mm:ss)</span><input class="input" bind:value={draft.duration} inputmode="numeric" /></label>
+  <label class="field"><span class="muted">{t('nameLabel')}</span><input class="input" bind:value={draft.name} placeholder={t('namePlaceholder')} /></label>
+  <label class="field"><span class="muted">{t('descLabel')}</span><textarea class="input" rows="2" bind:value={draft.description}></textarea></label>
+  <label class="field"><span class="muted">{t('ytLabel')}</span><input class="input" bind:value={draft.youtubeId} placeholder={t('ytPlaceholder')} /></label>
+  <label class="field"><span class="muted">{t('durationLabel')}</span><input class="input" bind:value={draft.duration} inputmode="numeric" /></label>
   <label class="field">
-    <span class="muted">Note in your timeline</span>
+    <span class="muted">{t('noteLabel')}</span>
     <input class="input" bind:value={draft.note} oninput={() => (noteTouched = true)} />
-    <span class="hint">The tracker is written as #meditation(duration), and the teacher with @name.</span>
+    <span class="hint">{t('noteHint')}</span>
   </label>
 </section>
 
 {#if problem}<p class="problem">{problem}</p>{:else if current}<p class="muted small">{current}</p>{/if}
 
-<button class="primary" onclick={save} disabled={!!current}>Save</button>
+<button class="primary" onclick={save} disabled={!!current}>{t('save')}</button>
 <div class="row-buttons">
-  {#if !isNew}<button class="ghost danger" onclick={remove}>Delete</button>{/if}
-  <button class="ghost" onclick={done}>Cancel</button>
+  {#if !isNew}<button class="ghost danger" onclick={remove}>{t('delete')}</button>{/if}
+  <button class="ghost" onclick={done}>{t('cancel')}</button>
 </div>
 
 <style>
