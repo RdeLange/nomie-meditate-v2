@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { meditate } from './meditation/state.svelte';
   import type { Meditation } from './meditation/library';
-  import { paletteFrom, type Palette } from './palette';
+  import { paletteFrom, glassFrom, type Palette, type Glass } from './palette';
   import { onPrefsChange } from './prefs-live';
   import List from './screens/list.svelte';
   import Player from './screens/player.svelte';
@@ -12,11 +12,13 @@
 
   let view = $state<View>({ name: 'list' });
   let palette = $state<Palette>(paletteFrom(undefined));
+  let glass = $state<Glass>(glassFrom(undefined));
   let scale = $state(1);
 
   const applyNomieValues = (plugin: any) => {
     if (!plugin?.prefs) return;
     palette = paletteFrom(plugin.prefs);
+    glass = glassFrom(plugin.prefs);
     scale = plugin.prefs.fontScale || 1;
   };
 
@@ -52,7 +54,7 @@
   });
 </script>
 
-<div class="root" style="--page: {palette.page}; --card: {palette.card}; --card-inner: {palette.cardInner}; --text: {palette.text}; --muted: {palette.textSecondary}; --line: {palette.separator}; --fill: {palette.fill}; --tint: {palette.tint}; --on-tint: {palette.onTint}; --tint-soft: {palette.tintSoft}; --good: {palette.good}; --danger: {palette.danger}; --scale: {scale};">
+<div class="root" style="--page: {palette.page}; --card: {palette.card}; --card-inner: {palette.cardInner}; --text: {palette.text}; --muted: {palette.textSecondary}; --line: {palette.separator}; --fill: {palette.fill}; --tint: {palette.tint}; --on-tint: {palette.onTint}; --tint-soft: {palette.tintSoft}; --good: {palette.good}; --danger: {palette.danger}; --glass-fill: {glass.fill}; --glass-edge: {glass.edge}; --glass-blur: {glass.blur}; --glass-shadow: {glass.shadow}; --scale: {scale};">
   <header class="top">
     <div class="title">
       <span aria-hidden="true">🧘🏽‍♀️</span>
